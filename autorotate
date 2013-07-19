@@ -1,0 +1,30 @@
+pastmode=`cat /sys/devices/platform/thinkpad_acpi/hotkey_tablet_mode`
+while [ true ]
+do
+  nowmode=`cat /sys/devices/platform/thinkpad_acpi/hotkey_tablet_mode`
+  if test 1 = $pastmode
+  then  
+    if test 0 = $nowmode
+    then
+      rotatenormal
+      echo 0 > /usr/bin/rotationmode
+      pastmode=0
+    fi
+  fi
+  if test 0 = $pastmode
+  then
+    if test 1 = $nowmode
+    then
+      rotatemode=`cat /usr/bin/rotationmode`
+      if test 0 = $rotatemode
+      then
+        rotateright
+        echo 1 > /usr/bin/rotationmode
+        pastmode=1
+      else
+        pastmode=1
+      fi
+    fi
+  fi
+  sleep 5
+done
